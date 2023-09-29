@@ -20,6 +20,7 @@ public class MoveCamera : MonoBehaviour
         else
         {
             transform.position = cameraPosition.position + new Vector3(0, 2.5f, 0);
+
         }
 
     }
