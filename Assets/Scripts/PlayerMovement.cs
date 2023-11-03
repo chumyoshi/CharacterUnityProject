@@ -9,7 +9,6 @@ public class PlayerMovement : MonoBehaviour
     private float desiredMoveSpeed;
     private float lastDesiredMoveSpeed;
     public float walkSpeed;
-    public float sprintSpeed;
     public float slideSpeed;
     public float wallrunSpeed;
 
@@ -24,15 +23,9 @@ public class PlayerMovement : MonoBehaviour
     public float airMultiplier;
     bool readyToJump;
 
-    [Header("Crouching")]
-    public float crouchSpeed;
-    public float crouchYscale;
-    private float startYScale;
 
     [Header("Keybinds")]
     public KeyCode jumpKey = KeyCode.Space;
-    public KeyCode sprintKey = KeyCode.LeftShift;
-    public KeyCode crouchKey = KeyCode.LeftControl;
 
     [Header("Ground Check")]
     public float playerHeight;
@@ -58,15 +51,12 @@ public class PlayerMovement : MonoBehaviour
     public enum MovementState
     {
         walking,
-        sprinting,
         wallrunning,
-        crouching,
         sliding,
         air
     }
 
     public bool sliding;
-    public bool crouching;
     public bool wallrunning;
 
     private void Start()
@@ -76,7 +66,6 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
 
-        startYScale = transform.localScale.y;
 
     }
 
@@ -114,16 +103,7 @@ public class PlayerMovement : MonoBehaviour
             Invoke(nameof(ResetJump), jumpCooldown);
         }
         
-        if (Input.GetKeyDown(crouchKey))
-        {
-            transform.localScale = new Vector3(transform.localScale.x, crouchYscale, transform.localScale.z);
-            rb.AddForce(Vector3.down * 20f, ForceMode.Impulse);
-        }
-
-        if (Input.GetKeyUp(crouchKey))
-        {
-            transform.localScale = new Vector3(transform.localScale.x, startYScale, transform.localScale.z);
-        }
+        
     }
 
 
@@ -144,22 +124,10 @@ public class PlayerMovement : MonoBehaviour
             if (OnSlope() && rb.velocity.y < 0.1f)
                 desiredMoveSpeed = slideSpeed;
             else
-                desiredMoveSpeed = sprintSpeed;
+                desiredMoveSpeed = walkSpeed;
         }
 
-        else if (Input.GetKey(crouchKey))
-        {
-            state = MovementState.crouching;
-            desiredMoveSpeed = crouchSpeed;
-        }
-
-
-
-        else if (grounded && Input.GetKey(sprintKey))
-        {
-            state = MovementState.sprinting;
-            desiredMoveSpeed = sprintSpeed;
-        }
+       
         
         else if (grounded)
         {
@@ -188,7 +156,7 @@ public class PlayerMovement : MonoBehaviour
     private IEnumerator SmoothlyLerpMoveSpeed()
     {
         float time = 0;
-        float difference = Mathf.Abs(desiredMoveSpeed - sprintSpeed);
+        float difference = Mathf.Abs(desiredMoveSpeed - walkSpeed);
         float startValue = moveSpeed;
 
         while (time < difference)

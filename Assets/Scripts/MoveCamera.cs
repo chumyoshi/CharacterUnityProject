@@ -5,24 +5,15 @@ using UnityEngine;
 public class MoveCamera : MonoBehaviour
 {
     public Transform cameraPosition;
-    public KeyCode crouchKey = KeyCode.C;
+    public float slidescale;
 
+    
 
     private void Update()
     {
+        transform.position = cameraPosition.position;
 
-        if (Input.GetKey(crouchKey))
-        {
-            transform.position = cameraPosition.position + new Vector3(0, 1, 0);
-        }
-
-
-        else
-        {
-            transform.position = cameraPosition.position + new Vector3(0, 2.5f, 0);
-
-        }
-
+        
+        
     }
-
 }
