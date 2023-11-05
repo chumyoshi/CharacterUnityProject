@@ -156,7 +156,7 @@ public class PlayerMovement : MonoBehaviour
     private IEnumerator SmoothlyLerpMoveSpeed()
     {
         float time = 0;
-        float difference = Mathf.Abs(desiredMoveSpeed - walkSpeed);
+        float difference = Mathf.Abs(desiredMoveSpeed - moveSpeed);
         float startValue = moveSpeed;
 
         while (time < difference)
